@@ -1,0 +1,1766 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JamesFlix</title>
+
+<style>
+
+/* =========================================================
+   JAMESFLIX
+   Dark purple cinematic streaming-style design
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: #08050d;
+    color: white;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: .025;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   NETFLIX STYLE INTRO
+========================================================= */
+
+.intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 40%, rgba(177, 117, 255, .2), transparent 30%),
+        linear-gradient(180deg, #140a18 0%, #09050c 100%);
+    overflow: hidden;
+    transition: opacity 1.1s ease, visibility 1.1s ease;
+}
+
+.intro-overlay::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 140%;
+    background: linear-gradient(90deg, transparent 0%, rgba(194, 129, 255, .18) 40%, rgba(255,255,255,.12) 50%, rgba(194,129,255,.18) 60%, transparent 100%);
+    transform: translateX(-120%) skewX(-18deg);
+    animation: introSweep 1.7s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+.intro-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.intro-noise {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 18px 18px;
+    mix-blend-mode: screen;
+    opacity: .12;
+}
+
+.intro-bars {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    z-index: 1;
+    opacity: .95;
+}
+
+.intro-bar {
+    width: 8px;
+    height: 16px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f3d9ff, #b96bff 45%, #6b2cb4 100%);
+    box-shadow: 0 0 25px rgba(177, 118, 255, .7);
+    animation: introBars 1.4s ease-in-out infinite alternate;
+}
+
+.intro-bar:nth-child(2) { height: 32px; animation-delay: .08s; }
+.intro-bar:nth-child(3) { height: 54px; animation-delay: .16s; }
+.intro-bar:nth-child(4) { height: 78px; animation-delay: .24s; }
+.intro-bar:nth-child(5) { height: 104px; animation-delay: .32s; }
+.intro-bar:nth-child(6) { height: 78px; animation-delay: .4s; }
+.intro-bar:nth-child(7) { height: 52px; animation-delay: .48s; }
+.intro-bar:nth-child(8) { height: 30px; animation-delay: .56s; }
+
+.intro-logo {
+    position: relative;
+    z-index: 2;
+    font-size: clamp(46px, 8vw, 96px);
+    font-weight: 900;
+    letter-spacing: -5px;
+    color: #d08dff;
+    text-shadow: 0 0 35px rgba(176, 107, 255, .45);
+    animation: introPop 1.4s ease-in-out forwards;
+}
+
+.intro-logo span {
+    color: #f7f3ff;
+}
+
+.intro-tag {
+    position: relative;
+    z-index: 2;
+    margin-top: 16px;
+    color: #d6c4eb;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    opacity: .8;
+    animation: introTag 1.5s ease forwards;
+}
+
+#lockScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 25%, rgba(176, 103, 255, .25), transparent 35%),
+        radial-gradient(circle at 20% 80%, rgba(119, 61, 197, .18), transparent 30%),
+        #09050c;
+    transition: opacity .8s ease, transform .8s ease, visibility .8s ease;
+}
+
+#lockScreen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.04);
+}
+
+.lock-box {
+    width: min(92vw, 390px);
+    padding: 42px 28px;
+    border-radius: 28px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 30px 100px rgba(0,0,0,.6);
+    text-align: center;
+    animation: floating 4s ease-in-out infinite;
+}
+
+.logo {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 22px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#d78dff,#7a3bc1);
+    box-shadow: 0 18px 40px rgba(160, 98, 255, .45);
+    font-size: 36px;
+}
+
+.lock-box h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.lock-box p {
+    color: #c7bdd5;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+#password {
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid rgba(255,255,255,.1);
+    outline: none;
+    border-radius: 16px;
+    background: rgba(255,255,255,.05);
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+#password::placeholder {
+    color: #8c7d98;
+}
+
+.unlock {
+    width: 100%;
+    padding: 15px 16px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg,#d98dff,#7a3bc1);
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 15px 35px rgba(155, 90, 255, .4);
+}
+
+.unlock:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 42px rgba(155, 90, 255, .5);
+}
+
+#error {
+    min-height: 20px;
+    margin-top: 12px;
+    color: #ff9de1;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#mainExperience {
+    opacity: 0;
+    transform: scale(1.02);
+    pointer-events: none;
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+#mainExperience.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.mini-player {
+    position: fixed;
+    left: 18px;
+    right: 18px;
+    bottom: 16px;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: 20px;
+    background: rgba(26, 17, 33, .82);
+    border: 1px solid rgba(255,255,255,.07);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 55px rgba(0,0,0,.45);
+}
+
+.mini-meta {
+    min-width: 0;
+    flex: 1;
+}
+
+.mini-title {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-artist {
+    font-size: 11px;
+    color: #b8a9c7;
+    margin-top: 2px;
+}
+
+.mini-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mini-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: rgba(255,255,255,.08);
+    color: white;
+    font-size: 14px;
+}
+
+.mini-btn.play {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg,#f0c2ff,#aa63ff);
+    color: #120a18;
+    font-weight: 900;
+}
+
+.progress-track {
+    width: 120px;
+    height: 4px;
+    background: rgba(255,255,255,.08);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-left: auto;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg,#d98dff,#8a4cea);
+    border-radius: inherit;
+}
+
+@keyframes introSweep {
+    0% { transform: translateX(-120%) skewX(-18deg); }
+    40% { transform: translateX(40%) skewX(-18deg); }
+    100% { transform: translateX(120%) skewX(-18deg); }
+}
+
+@keyframes introBars {
+    0% { transform: scaleY(.5); opacity: .5; }
+    100% { transform: scaleY(1.3); opacity: 1; }
+}
+
+@keyframes introPop {
+    0% {
+        opacity: 0;
+        transform: scale(.8) translateY(26px);
+        filter: blur(10px);
+    }
+    45% {
+        opacity: 1;
+        transform: scale(1.06) translateY(0);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes introTag {
+    0% { opacity: 0; transform: translateY(12px); }
+    100% { opacity: .8; transform: translateY(0); }
+}
+
+/* =========================================================
+   LOADING SCREEN
+========================================================= */
+
+#loadingScreen {
+    position: fixed;
+    inset: 0;
+    background: #08050d;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+}
+
+.loading-title {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -3px;
+
+    color: #b86cff;
+
+    animation:
+        loadingPulse 1.6s ease-in-out infinite;
+}
+
+.loading-subtitle {
+    position: absolute;
+    margin-top: 110px;
+
+    color: #82758f;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+@keyframes loadingPulse {
+
+    0%, 100% {
+        opacity: .4;
+        transform: scale(.97);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.03);
+    }
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 76px;
+
+    padding: 0 5%;
+
+    display: flex;
+    align-items: center;
+
+    z-index: 1000;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(5,3,8,.95),
+            rgba(5,3,8,.55),
+            transparent
+        );
+
+    transition:
+        background .4s ease,
+        backdrop-filter .4s ease;
+}
+
+.navbar.scrolled {
+    background: rgba(8,5,13,.88);
+    backdrop-filter: blur(18px);
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+
+    color: #c477ff;
+
+    cursor: pointer;
+}
+
+.brand span {
+    color: white;
+}
+
+.nav-right {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-text {
+    color: #b8adbf;
+    font-size: 13px;
+}
+
+.profile {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #b85cff,
+            #57227e
+        );
+
+    font-size: 14px;
+    font-weight: 700;
+
+    box-shadow:
+        0 0 25px rgba(170,80,255,.35);
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.bottom-tag {
+    position: absolute;
+    left: 6%;
+    bottom: 42px;
+    z-index: 4;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(181,96,255,.9), rgba(98,43,151,.8));
+    border: 1px solid rgba(255,255,255,.18);
+    box-shadow: 0 18px 40px rgba(140,70,220,.35);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #fff;
+    backdrop-filter: blur(12px);
+}
+
+.bottom-tag span {
+    color: #f7e7ff;
+}
+
+.hero {
+    min-height: 720px;
+
+    position: relative;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding:
+        0 6%
+        100px;
+
+    overflow: hidden;
+}
+
+/* background picture */
+
+.hero-image {
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            90deg,
+            #08050d 0%,
+            rgba(8,5,13,.88) 25%,
+            rgba(8,5,13,.32) 70%,
+            rgba(8,5,13,.75) 100%
+        ),
+        linear-gradient(
+            to top,
+            #08050d 0%,
+            transparent 45%,
+            rgba(8,5,13,.3)
+        ),
+        url("james.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    transform: scale(1.08);
+
+    animation:
+        heroZoom 12s ease-in-out infinite alternate;
+}
+
+@keyframes heroZoom {
+
+    from {
+        transform: scale(1.08);
+    }
+
+    to {
+        transform: scale(1.15);
+    }
+}
+
+/* purple atmospheric glow */
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 600px;
+    height: 600px;
+
+    right: -180px;
+    top: 50px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(160,65,255,.3),
+            transparent 68%
+        );
+
+    filter: blur(30px);
+
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+
+    z-index: 3;
+
+    max-width: 680px;
+
+    animation:
+        heroContent 1.3s ease forwards;
+}
+
+@keyframes heroContent {
+
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.eyebrow {
+    color: #c77bff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 3px;
+    text-transform: uppercase;
+
+    margin-bottom: 18px;
+}
+
+.hero-title {
+    font-size:
+        clamp(48px, 8vw, 92px);
+
+    line-height: .95;
+
+    letter-spacing: -5px;
+
+    margin-bottom: 25px;
+
+    text-shadow:
+        0 10px 50px rgba(0,0,0,.7);
+}
+
+.hero-description {
+    color: #c5bacb;
+
+    font-size: 16px;
+    line-height: 1.7;
+
+    max-width: 570px;
+
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.hero-button {
+    border: none;
+
+    padding: 14px 23px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.primary-button {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #bd6dff,
+            #7933b4
+        );
+
+    box-shadow:
+        0 10px 35px rgba(150,60,255,.3);
+}
+
+.secondary-button {
+    color: white;
+
+    background: rgba(255,255,255,.1);
+
+    backdrop-filter: blur(10px);
+}
+
+.hero-button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 40px rgba(170,70,255,.3);
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.message-section {
+    position: relative;
+
+    padding:
+        100px 7%
+        150px;
+
+    background:
+        radial-gradient(
+            circle at 80% 30%,
+            rgba(126,45,190,.14),
+            transparent 35%
+        );
+}
+
+.message-container {
+    max-width: 950px;
+
+    margin: auto;
+}
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-label {
+    color: #a866d5;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 18px;
+}
+
+.message-heading {
+    font-size:
+        clamp(36px, 5vw, 64px);
+
+    line-height: 1;
+
+    letter-spacing: -3px;
+
+    margin-bottom: 55px;
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+.message-heading.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message-text {
+    color: #bdb2c3;
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+    max-width: 850px;
+
+    opacity: 0;
+
+    transform: translateY(40px);
+
+    transition:
+        opacity 1.2s ease .15s,
+        transform 1.2s ease .15s;
+}
+
+.message-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.message-text p {
+    margin-bottom: 30px;
+}
+
+.message-text .emphasis {
+    color: white;
+
+    font-size: 27px;
+    line-height: 1.5;
+
+    font-weight: 600;
+
+    margin:
+        55px 0;
+}
+
+.message-text .purple {
+    color: #c67aff;
+}
+
+/* =========================================================
+   PICTURE
+========================================================= */
+
+.bottom-picture {
+    margin-top: 80px;
+
+    width: 100%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 35px 100px rgba(0,0,0,.65),
+        0 0 80px rgba(130,50,210,.12);
+
+    opacity: 0;
+
+    transform:
+        translateY(50px)
+        scale(.97);
+
+    transition:
+        opacity 1.2s ease,
+        transform 1.2s ease;
+}
+
+.bottom-picture.visible {
+    opacity: 1;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+.bottom-picture::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(8,5,13,.45),
+            transparent 60%
+        );
+
+    pointer-events: none;
+}
+
+.bottom-picture img {
+    display: block;
+
+    width: 100%;
+
+    max-height: 600px;
+
+    object-fit: cover;
+
+    transition:
+        transform 1.5s ease;
+}
+
+.bottom-picture:hover img {
+    transform: scale(1.035);
+}
+
+/* =========================================================
+   QUOTE CARD
+========================================================= */
+
+.quote-section {
+    padding:
+        80px 7%
+        130px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #08050d,
+            #0e0815
+        );
+}
+
+.quote {
+    max-width: 850px;
+
+    margin: auto;
+
+    padding: 55px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(150,70,220,.13),
+            rgba(255,255,255,.025)
+        );
+
+    border:
+        1px solid rgba(190,120,255,.12);
+
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.04),
+        0 30px 80px rgba(0,0,0,.3);
+
+    text-align: center;
+
+    opacity: 0;
+
+    transform: translateY(40px);
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+.quote.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.quote-symbol {
+    font-size: 40px;
+
+    color: #bd6dff;
+
+    margin-bottom: 20px;
+}
+
+.quote-text {
+    font-size:
+        clamp(24px, 4vw, 42px);
+
+    line-height: 1.35;
+
+    font-weight: 600;
+
+    letter-spacing: -1.5px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    padding: 50px 7%;
+
+    border-top:
+        1px solid rgba(255,255,255,.05);
+
+    color: #665d6b;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   FLOATING PARTICLES
+========================================================= */
+
+.particle {
+    position: fixed;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background: #c27aff;
+
+    opacity: .4;
+
+    pointer-events: none;
+
+    z-index: -1;
+
+    animation:
+        particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+
+    from {
+        transform:
+            translateY(110vh)
+            translateX(0);
+
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .5;
+    }
+
+    80% {
+        opacity: .3;
+    }
+
+    to {
+        transform:
+            translateY(-10vh)
+            translateX(80px);
+
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 700px) {
+
+    .navbar {
+        padding: 0 22px;
+    }
+
+    .nav-text {
+        display: none;
+    }
+
+    .hero {
+        min-height: 650px;
+
+        padding:
+            0 25px
+            75px;
+    }
+
+    .hero-title {
+        letter-spacing: -3px;
+    }
+
+    .hero-description {
+        font-size: 14px;
+    }
+
+    .message-section,
+    .quote-section {
+        padding:
+            80px 25px
+            100px;
+    }
+
+    .message-text {
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    .message-text .emphasis {
+        font-size: 23px;
+    }
+
+    .quote {
+        padding: 35px 25px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="lockScreen">
+    <div class="lock-box">
+        <div class="logo">♫</div>
+        <h1>Welcome Baby.</h1>
+        <p>Enter the password to open your message.</p>
+        <input id="password" type="password" placeholder="Password" autocomplete="off">
+        <button class="unlock" onclick="unlock()">Continue</button>
+        <div id="error"></div>
+    </div>
+</div>
+
+<div id="introOverlay" class="intro-overlay">
+    <div class="intro-noise"></div>
+    <div class="intro-bars" aria-hidden="true">
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+        <div class="intro-bar"></div>
+    </div>
+    <div class="intro-logo">James<span>Flix</span></div>
+    <div class="intro-tag">A special release</div>
+</div>
+
+
+<!-- =====================================================
+     LOADING SCREEN
+===================================================== -->
+
+<div id="loadingScreen">
+
+    <div class="loading-title">
+        JamesFlix
+    </div>
+
+    <div class="loading-subtitle">
+        something made for you
+    </div>
+
+</div>
+
+
+<div id="mainExperience">
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav class="navbar" id="navbar">
+
+    <div class="brand">
+        James<span>Flix</span>
+    </div>
+
+    <div class="nav-right">
+
+        <div class="nav-text">
+            A special message
+        </div>
+
+        <div class="profile">
+            A
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-image"></div>
+
+    <div class="bottom-tag">James<span>Flix</span></div>
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            A message for you
+        </div>
+
+        <h1 class="hero-title">
+            Dear<br>
+            Anton
+        </h1>
+
+        <p class="hero-description">
+            Some things are easier to say when the world
+            gets quiet. So I made this little place for
+            everything I wanted you to hear.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button
+                class="hero-button primary-button"
+                onclick="scrollToMessage()"
+            >
+                ▶ Read message
+            </button>
+
+            <button
+                class="hero-button secondary-button"
+                onclick="scrollToBottom()"
+            >
+                More info
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MESSAGE
+===================================================== -->
+
+<section class="message-section">
+
+    <div class="message-container">
+
+        <div class="section-label">
+            Episode 01 · The things I couldn't say
+        </div>
+
+
+        <h2 class="message-heading reveal">
+            Dear Anton
+        </h2>
+
+
+        <div class="message-text reveal">
+
+
+            <p>
+                Hey baby,
+            </p>
+
+
+            <p>
+                I want to start by saying I’m so deeply,
+                genuinely sorry. I’m sorry for the exhausting
+                push and pull, the mixed signals, and for the
+                continuous flirting despite my constant
+                insistence on being straight.
+            </p>
+
+
+            <p>
+                When you first started distancing yourself,
+                my ego completely took over. I stupidly
+                convinced myself it was just another one of
+                our small <em>tampuhan</em> moments—that I
+                could just wait it out, hold out my hand,
+                and pull you right back like I always did.
+            </p>
+
+
+            <p>
+                My pride was so high that I totally ignored
+                what you were actually going through,
+                completely blind to how much I was hurting you.
+            </p>
+
+
+            <p class="emphasis">
+                As the days went by, every single time we
+                happened to be in the same room, my eyes
+                would instantly hunt for you.
+            </p>
+
+
+            <p>
+                I kept stupidly expecting you to run up to me,
+                throw your arms around me, and start talking
+                to me like nothing had changed.
+            </p>
+
+
+            <p>
+                But whenever you’d just walk past me without
+                even a second glance, acting like I was a
+                complete stranger…
+            </p>
+
+
+            <p class="emphasis">
+                god, Anton, I’d be lying if I said it didn’t sting.
+            </p>
+
+
+            <p>
+                Standing in the exact same room as you,
+                feeling that icy distance between us,
+                absolute ate me alive.
+            </p>
+
+
+            <p>
+                It drove me completely insane, especially
+                seeing you around Sion.
+            </p>
+
+
+            <p>
+                Watching you smile at him, tease him, and
+                give him that exact same gentle, radiant warmth
+                you used to reserve just for me...
+            </p>
+
+
+            <p class="emphasis">
+                it broke something inside me.
+            </p>
+
+
+            <p>
+                I was losing my mind, realizing that the
+                warmth I threw away was now keeping someone
+                else safe.
+            </p>
+
+
+            <p>
+                The truth is, I grew up with internalized
+                homophobia running far too deep.
+            </p>
+
+
+            <p>
+                Deep down, I always knew I wasn’t the ideal
+                son my father wanted me to be, and that made
+                me deeply, endlessly insecure.
+            </p>
+
+
+            <p>
+                I conditioned myself to believe that these
+                intense feelings I had whenever I was with
+                you were wrong—that love like this was a
+                mistake, a flaw, something dirty I needed
+                to run away from.
+            </p>
+
+
+            <p>
+                Feeling something I was taught my whole life
+                to dislike terrified me to my absolute core.
+            </p>
+
+
+            <p>
+                I had never felt anything remotely like this
+                before, and realizing that I was falling
+                deeply in love with you only amplified my
+                insecurity and my sickening fear of
+                disappointing my dad.
+            </p>
+
+
+            <p class="emphasis">
+                But realizing that all these terrifying
+                feelings were for <span class="purple">you</span>...
+                somehow made everything better.
+            </p>
+
+
+            <p>
+                You made me feel grounded and certain about
+                something I had spent my entire life cowering
+                from.
+            </p>
+
+
+            <p>
+                Even when the whole world felt wrong,
+                being near you made my fears go quiet.
+            </p>
+
+
+            <p>
+                You gave me a soft place to land, showing me
+                a kind of tenderness and unconditional safety
+                I never thought someone like me was allowed
+                to feel.
+            </p>
+
+
+            <p>
+                I am so, so sorry for taking your heart for
+                granted, for thoroughly confusing you, and
+                for causing you so much unnecessary pain
+                just because I was too much of a coward to
+                face my own truth sooner.
+            </p>
+
+
+            <p>
+                You deserved absolute honesty and gentle love,
+                and instead, I gave you my unresolved baggage
+                and defensive pride.
+            </p>
+
+
+            <p>
+                I know right now you’re not ready to face me
+                or look at me, and that’s completely okay.
+            </p>
+
+
+            <p>
+                I fully respect your boundaries and your space.
+            </p>
+
+
+            <p class="emphasis">
+                Basta, please just know that I’m always going
+                to be right here, waiting patiently with open
+                arms, just in case you ever decide you want
+                to run back into them.
+            </p>
+
+
+            
+
+
+        </div>
+
+
+        <!-- =================================================
+             PICTURE
+        ================================================= -->
+
+        <div class="bottom-picture reveal">
+
+            <img
+                src="james.jpg"
+                alt="For Anton"
+            >
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FINAL QUOTE
+===================================================== -->
+
+<section class="quote-section">
+
+    <div class="quote reveal">
+
+        <div class="quote-symbol">
+            ♡
+        </div>
+
+        <div class="quote-text">
+            So again, from the bottom of my heart,
+            I am so sincerely sorry, Anton.
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+    Made with care · JamesFlix
+</footer>
+
+
+<script>
+
+/* =========================================================
+   LOADING SCREEN
+========================================================= */
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        const intro = document.getElementById("introOverlay");
+        if (intro) {
+            intro.classList.add("hidden");
+        }
+
+        const loading =
+            document.getElementById("loadingScreen");
+
+        if (loading) {
+            loading.style.opacity = "0";
+            loading.style.visibility = "hidden";
+        }
+
+    }, 1800);
+
+});
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+const navbar =
+    document.getElementById("navbar");
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 60) {
+
+        navbar.classList.add("scrolled");
+
+    } else {
+
+        navbar.classList.remove("scrolled");
+
+    }
+
+});
+
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+const revealElements =
+    document.querySelectorAll(".reveal");
+
+const observer =
+    new IntersectionObserver(
+        (entries) => {
+
+            entries.forEach(entry => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add("visible");
+
+                }
+
+            });
+
+        },
+        {
+            threshold: .15
+        }
+    );
+
+
+revealElements.forEach(element => {
+
+    observer.observe(element);
+
+});
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+function scrollToMessage() {
+
+    document
+        .querySelector(".message-section")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function scrollToBottom() {
+
+    document
+        .querySelector(".bottom-picture")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+/* =========================================================
+   FLOATING PURPLE PARTICLES
+========================================================= */
+
+function createParticle() {
+
+    const particle =
+        document.createElement("div");
+
+    particle.className = "particle";
+
+    particle.style.left =
+        Math.random() * 100 + "vw";
+
+    particle.style.animationDuration =
+        (8 + Math.random() * 12) + "s";
+
+    particle.style.animationDelay =
+        Math.random() * 8 + "s";
+
+    particle.style.opacity =
+        .15 + Math.random() * .35;
+
+    document.body.appendChild(particle);
+
+}
+
+
+/* Create subtle atmosphere */
+
+for (let i = 0; i < 18; i++) {
+
+    createParticle();
+
+}
+
+</script>
+
+<div class="mini-player" aria-label="audio player">
+    <div class="mini-meta">
+        <div class="mini-title">I'm Sorry, Baby.</div>
+        <div class="mini-artist">A special release</div>
+    </div>
+    <div class="mini-controls">
+        <button class="mini-btn" onclick="restartSong()" aria-label="Restart song">↶</button>
+        <button class="mini-btn play" id="miniPlayButton" onclick="togglePlay()" aria-label="Play or pause">▶</button>
+    </div>
+    <div class="progress-track" aria-label="song progress">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+</div>
+
+<audio id="audio" src="miguel.mp3" preload="auto"></audio>
+
+<script>
+const PASSWORD = "anton";
+const lockScreen = document.getElementById("lockScreen");
+const mainExperience = document.getElementById("mainExperience");
+const passwordInput = document.getElementById("password");
+const error = document.getElementById("error");
+const audio = document.getElementById("audio");
+const miniPlayButton = document.getElementById("miniPlayButton");
+const progressFill = document.getElementById("progressFill");
+
+function unlock() {
+    const entered = passwordInput.value.trim().toLowerCase();
+    if (entered === PASSWORD) {
+        error.textContent = "";
+        lockScreen.classList.add("hidden");
+        mainExperience.classList.add("active");
+        setTimeout(() => {
+            lockScreen.style.display = "none";
+        }, 800);
+        setTimeout(() => {
+            audio.play().catch(() => {});
+            miniPlayButton.textContent = "Ⅱ";
+        }, 900);
+    } else {
+        error.textContent = "That is not the password.";
+        passwordInput.value = "";
+        passwordInput.focus();
+        const box = document.querySelector(".lock-box");
+        box.style.animation = "shake .35s ease";
+        setTimeout(() => {
+            box.style.animation = "floating 4s ease-in-out infinite";
+        }, 350);
+    }
+}
+
+passwordInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") unlock();
+});
+
+function togglePlay() {
+    if (audio.paused) {
+        audio.play().catch(() => {});
+        miniPlayButton.textContent = "Ⅱ";
+    } else {
+        audio.pause();
+        miniPlayButton.textContent = "▶";
+    }
+}
+
+function restartSong() {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    miniPlayButton.textContent = "Ⅱ";
+}
+
+audio.addEventListener("play", () => {
+    miniPlayButton.textContent = "Ⅱ";
+});
+
+audio.addEventListener("pause", () => {
+    miniPlayButton.textContent = "▶";
+});
+
+audio.addEventListener("timeupdate", () => {
+    if (!audio.duration) return;
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = percent + "%";
+});
+
+audio.addEventListener("ended", () => {
+    miniPlayButton.textContent = "▶";
+    progressFill.style.width = "0%";
+});
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        const intro = document.getElementById("introOverlay");
+        if (intro) intro.classList.add("hidden");
+        const loading = document.getElementById("loadingScreen");
+        if (loading) {
+            loading.style.opacity = "0";
+            loading.style.visibility = "hidden";
+        }
+    }, 1800);
+});
+</script>
+
+</div>
+
+</body>
+</html>
